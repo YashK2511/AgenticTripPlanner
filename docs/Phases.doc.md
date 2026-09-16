@@ -2,12 +2,12 @@
 
 ## Phase 1: Foundation & Setup (Week 1-2)
 ### Tasks:
-- [ ] Environment setup (Python 3.x, FastAPI, PostgreSQL, pgvector)
-- [ ] Initialize project structure (backend, frontend, shared models)
-- [ ] Configure LLM API access and test connectivity
-- [ ] Set up version control and project documentation
-- [ ] Create database schema for trip state, profiles, and evidence
-- [ ] Implement basic FastAPI endpoints skeleton
+- [x] Environment setup (Python 3.x, FastAPI, PostgreSQL, pgvector)
+- [x] Initialize project structure (backend, frontend, shared models)
+- [x] Configure LLM API access and test connectivity
+- [x] Set up version control and project documentation
+- [x] Create database schema for trip state, profiles, and evidence
+- [x] Implement basic FastAPI endpoints skeleton
 
 ## Phase 2: Profile & User Input Processing (Week 3-4)
 ### Tasks:

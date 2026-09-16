@@ -2,7 +2,7 @@
 
 ## Project Milestones
 
-- [ ] **Milestone 1: Project Setup & Baseline Schemas** (Target: Phase 1)
+- [x] **Milestone 1: Project Setup & Baseline Schemas** (Target: Phase 1)
 - [ ] **Milestone 2: Profile Extraction & Natural Language Parser** (Target: Phase 2)
 - [ ] **Milestone 3: Data Ingestion & Vector Retrieval Pipeline** (Target: Phase 3)
 - [ ] **Milestone 4: Route Matrix & Budget Deterministic Solvers** (Target: Phase 4)
@@ -16,10 +16,10 @@
 ## Detailed Task Tracker
 
 ### Phase 1: Environment & Setup
-- [ ] Initialize Python environment and install dependencies (`FastAPI`, `LangGraph`, `pgvector`, `Pydantic v2`, `SQLAlchemy`)
-- [ ] Set up PostgreSQL database with `pgvector` extension
-- [ ] Establish directory structure (`backend/`, `frontend/`, `docs/`, `tests/`)
-- [ ] Configure environment variables (`.env.example`) and logging harness
+- [x] Initialize Python environment and install dependencies (`FastAPI`, `LangGraph`, `pgvector`, `Pydantic v2`, `SQLAlchemy`)
+- [x] Set up PostgreSQL database with `pgvector` extension
+- [x] Establish directory structure (`backend/`, `frontend/`, `docs/`, `tests/`)
+- [x] Configure environment variables (`.env.example`) and logging harness
 
 ### Phase 2: User Profile & Constraint Extraction
 - [ ] Implement `UserProfile` Pydantic models (hard vs soft constraints)
