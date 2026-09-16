@@ -1,0 +1,26 @@
+# Node / Python
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+
+# Environment variables
+.env
+.env.local
+
+# Databases
+*.db
+*.sqlite3
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Claude specific
+.claude/
+memory/
+graphify-out/
