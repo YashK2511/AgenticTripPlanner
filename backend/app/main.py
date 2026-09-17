@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.endpoints import profile
@@ -10,10 +11,20 @@ import uvicorn
 # Initialize logging
 logger = setup_logging(settings.LOG_LEVEL)
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
+    logger.info("Starting %s v%s", settings.APP_NAME, settings.APP_VERSION)
+    logger.info("Database URL: %s", settings.database_url)
+    init_db()
+    yield
+    # Shutdown logic would go here if needed
+
 app = FastAPI(
     title=settings.APP_NAME,
     description="LLM-orchestrated Multi-Agent System for personalized trip planning",
     version=settings.APP_VERSION,
+    lifespan=lifespan,
 )
 
 # Configure CORS
@@ -29,11 +40,6 @@ app.add_middleware(
 app.include_router(profile.router, prefix="/api/profile", tags=["Profile Agent"])
 
 
-@app.on_event("startup")
-def on_startup():
-    logger.info("Starting %s v%s", settings.APP_NAME, settings.APP_VERSION)
-    logger.info("Database URL: %s", settings.database_url)
-    init_db()
 
 
 @app.get("/")
