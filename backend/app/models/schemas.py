@@ -1,6 +1,9 @@
 from typing import List, Optional, Literal, Dict, Any, Tuple
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from datetime import date, time, datetime
+
+
+# ──────────────────────── Profile & Traveler ────────────────────────
 
 class Traveler(BaseModel):
     id: str
@@ -8,9 +11,11 @@ class Traveler(BaseModel):
     gender: Literal["male", "female", "other"]
     accessibility_needs: List[str] = Field(default_factory=list)
 
+
 class Money(BaseModel):
     amount: float
     currency: str = "INR"
+
 
 class UserProfile(BaseModel):
     destination: str
@@ -21,14 +26,65 @@ class UserProfile(BaseModel):
     travelers: List[Traveler]
     interests: List[str] = Field(default_factory=list)
     hard_constraints: Dict[str, Any] = Field(default_factory=dict)
-    soft_preferences: Dict[str, float] = Field(default_factory=dict) # preference: weight
+    soft_preferences: Dict[str, float] = Field(default_factory=dict)  # preference: weight
     missing_fields: List[str] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def validate_dates(self):
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValueError("end_date must be on or after start_date")
+        return self
+
+    @property
+    def trip_duration_days(self) -> int:
+        return (self.end_date - self.start_date).days + 1
+
+    @property
+    def is_complete(self) -> bool:
+        """True when no crucial fields are missing."""
+        return len(self.missing_fields) == 0
+
+
+class ProfileExtractionResult(BaseModel):
+    """Wrapper around UserProfile with metadata for the API response."""
+    profile: UserProfile
+    is_complete: bool = Field(
+        description="Whether the profile has all required fields"
+    )
+    clarification_questions: List[str] = Field(
+        default_factory=list,
+        description="Follow-up questions to ask the user for missing info",
+    )
+    request_id: str = Field(
+        description="Unique identifier for tracing this extraction"
+    )
+
+
+class ClarificationRequest(BaseModel):
+    """Request body for the /clarify endpoint."""
+    request_id: str = Field(
+        description="The request_id returned by the initial extraction"
+    )
+    original_request: str = Field(
+        description="The user's original travel request text"
+    )
+    follow_up: str = Field(
+        description="The user's follow-up answer to clarification questions"
+    )
+    partial_profile: Optional[UserProfile] = Field(
+        default=None,
+        description="The previously extracted partial profile, if available",
+    )
+
+
+# ──────────────────────── Evidence & POI ────────────────────────
 
 class Evidence(BaseModel):
     source_id: str
-    source_type: str # e.g., "google_places", "internal_db"
+    source_type: str  # e.g., "google_places", "internal_db"
     retrieved_at: datetime
     url: Optional[str] = None
+
 
 class POICandidate(BaseModel):
     id: str
@@ -37,30 +93,41 @@ class POICandidate(BaseModel):
     category: str
     description: str
     opening_hours: Dict[str, Any] = Field(default_factory=dict)
-    visit_duration: int # in minutes
+    visit_duration: int  # in minutes
     cost_range: Tuple[float, float]
     accessibility: Dict[str, bool] = Field(default_factory=dict)
     evidence: Evidence
     relevance_score: float
 
+
+# ──────────────────────── Routes ────────────────────────
+
 class TransportMode(BaseModel):
     mode: Literal["walking", "transit", "driving", "bicycling"]
 
+
 class RouteMatrix(BaseModel):
-    distances: Dict[str, float]  # stringified tuple key to float mapping (in meters)
-    travel_times: Dict[str, float]  # stringified tuple key to float mapping (in minutes)
+    distances: Dict[str, float]  # stringified tuple key → meters
+    travel_times: Dict[str, float]  # stringified tuple key → minutes
     mode: TransportMode
 
+
+# ──────────────────────── Constraints ────────────────────────
+
 class Violation(BaseModel):
-    type: str # "budget", "time", "closed", "accessibility"
+    type: str  # "budget", "time", "closed", "accessibility"
     severity: Literal["hard", "soft"]
     affected_item: str
     reason: str
     repair_suggestion: str
 
+
 class ConstraintCheck(BaseModel):
     passed: bool
     violations: List[Violation] = Field(default_factory=list)
+
+
+# ──────────────────────── Itinerary ────────────────────────
 
 class TimeBlock(BaseModel):
     type: Literal["travel", "activity", "meal", "rest", "checkin", "checkout"]
@@ -70,17 +137,22 @@ class TimeBlock(BaseModel):
     cost: Money
     rationale: str
 
+
 class DayPlan(BaseModel):
     date: date
     blocks: List[TimeBlock] = Field(default_factory=list)
     daily_cost: Money
     daily_travel_time: float
 
+
 class Itinerary(BaseModel):
     days: List[DayPlan] = Field(default_factory=list)
     total_cost: Money
     assumptions: List[str] = Field(default_factory=list)
     warnings: List[str] = Field(default_factory=list)
+
+
+# ──────────────────────── Validation ────────────────────────
 
 class Conflict(BaseModel):
     severity: Literal["hard", "soft"]
@@ -91,9 +163,13 @@ class Conflict(BaseModel):
     evidence: Optional[str] = None
     repair_action: str
 
+
 class ValidationReport(BaseModel):
     valid: bool
     conflicts: List[Conflict] = Field(default_factory=list)
+
+
+# ──────────────────────── Trip State ────────────────────────
 
 class TripState(BaseModel):
     id: str

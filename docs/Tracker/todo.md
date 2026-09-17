@@ -3,7 +3,7 @@
 ## Project Milestones
 
 - [x] **Milestone 1: Project Setup & Baseline Schemas** (Target: Phase 1)
-- [ ] **Milestone 2: Profile Extraction & Natural Language Parser** (Target: Phase 2)
+- [x] **Milestone 2: Profile Extraction & Natural Language Parser** (Target: Phase 2)
 - [ ] **Milestone 3: Data Ingestion & Vector Retrieval Pipeline** (Target: Phase 3)
 - [ ] **Milestone 4: Route Matrix & Budget Deterministic Solvers** (Target: Phase 4)
 - [ ] **Milestone 5: LangGraph Multi-Agent Orchestrator** (Target: Phase 5)
@@ -22,10 +22,10 @@
 - [x] Configure environment variables (`.env.example`) and logging harness
 
 ### Phase 2: User Profile & Constraint Extraction
-- [ ] Implement `UserProfile` Pydantic models (hard vs soft constraints)
-- [ ] Build Profile Agent prompt template and LLM schema validation
-- [ ] Add missing field detection and clarification prompts
-- [ ] Write unit tests for profile extraction
+- [x] Implement `UserProfile` Pydantic models (hard vs soft constraints)
+- [x] Build Profile Agent prompt template and LLM schema validation
+- [x] Add missing field detection and clarification prompts
+- [x] Write unit tests for profile extraction
 
 ### Phase 3: Retrieval & Grounding (RAG)
 - [ ] Seed POI, restaurant, and hotel sample data into PostgreSQL

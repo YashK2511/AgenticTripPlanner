@@ -11,12 +11,12 @@
 
 ## Phase 2: Profile & User Input Processing (Week 3-4)
 ### Tasks:
-- [ ] Design Pydantic schemas for user profile, constraints, and preferences
-- [ ] Implement User Profile & Preference Agent
-- [ ] Build natural-language-to-structured-profile extraction with LLM
-- [ ] Add validation logic for missing fields and constraint classification
-- [ ] Create basic web UI for trip input (React/Next.js)
-- [ ] Test profile extraction with representative queries
+- [x] Design Pydantic schemas for user profile, constraints, and preferences
+- [x] Implement User Profile & Preference Agent
+- [x] Build natural-language-to-structured-profile extraction with LLM
+- [x] Add validation logic for missing fields and constraint classification
+- [x] Create basic web UI for trip input (React/Next.js)
+- [x] Test profile extraction with representative queries
 
 ## Phase 3: Retrieval & Data Integration (Week 5-6)
 ### Tasks:
