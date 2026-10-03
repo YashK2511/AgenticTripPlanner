@@ -20,12 +20,12 @@
 
 ## Phase 3: Retrieval & Data Integration (Week 5-6)
 ### Tasks:
-- [ ] Set up vector database (pgvector) for POI embeddings
-- [ ] Implement POI, restaurant, and accommodation retrieval agent
-- [ ] Integrate Maps/Places API (or fallback data sources)
-- [ ] Build semantic matching with sentence-transformers
-- [ ] Implement candidate filtering and normalization
-- [ ] Store evidence metadata (source, timestamp, coordinates)
+- [x] Set up vector database (pgvector) [via SQLite numpy fallback] for POI embeddings
+- [x] Implement POI, restaurant, and accommodation retrieval agent
+- [x] Integrate Maps/Places API (or fallback data sources) [seeded JSON]
+- [x] Build semantic matching with sentence-transformers
+- [x] Implement candidate filtering and normalization
+- [x] Store evidence metadata (source, timestamp, coordinates)
 
 ## Phase 4: Route & Budget Agents (Week 7-8)
 ### Tasks:

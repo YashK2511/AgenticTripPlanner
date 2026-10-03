@@ -64,8 +64,20 @@ class POICandidateModel(Base):
     accessibility_json = Column(JSON)
     evidence_json = Column(JSON)  # Serialized Evidence
     relevance_score = Column(Float, index=True)
-    # Vector embedding will be added in Phase 3 when pgvector is used
-    # embedding = Column(Vector(768))  # Uncomment when PostgreSQL+pgvector is available
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class POIEmbeddingModel(Base):
+    """
+    SQLAlchemy model for storing POI embeddings.
+    For SQLite, we store as JSON arrays. For Postgres, this will be migrated to pgvector.
+    """
+    __tablename__ = "poi_embeddings"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    poi_id = Column(String, index=True, unique=True, nullable=False)
+    embedding_json = Column(JSON, nullable=False)  # List[float] representing 384-D vector
+    model_name = Column(String, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 

@@ -4,7 +4,7 @@
 
 - [x] **Milestone 1: Project Setup & Baseline Schemas** (Target: Phase 1)
 - [x] **Milestone 2: Profile Extraction & Natural Language Parser** (Target: Phase 2)
-- [ ] **Milestone 3: Data Ingestion & Vector Retrieval Pipeline** (Target: Phase 3)
+- [x] **Milestone 3: Data Ingestion & Vector Retrieval Pipeline** (Target: Phase 3)
 - [ ] **Milestone 4: Route Matrix & Budget Deterministic Solvers** (Target: Phase 4)
 - [ ] **Milestone 5: LangGraph Multi-Agent Orchestrator** (Target: Phase 5)
 - [ ] **Milestone 6: Itinerary Synthesis & Critic Verifier** (Target: Phase 6)
@@ -28,10 +28,10 @@
 - [x] Write unit tests for profile extraction
 
 ### Phase 3: Retrieval & Grounding (RAG)
-- [ ] Seed POI, restaurant, and hotel sample data into PostgreSQL
-- [ ] Generate vector embeddings using `sentence-transformers`
-- [ ] Implement POI Retrieval Agent with metadata filtering (hours, budget, accessibility)
-- [ ] Ensure source evidence metadata is attached to all returned candidates
+- [x] Seed POI, restaurant, and hotel sample data into PostgreSQL
+- [x] Generate vector embeddings using `sentence-transformers`
+- [x] Implement POI Retrieval Agent with metadata filtering (hours, budget, accessibility)
+- [x] Ensure source evidence metadata is attached to all returned candidates
 
 ### Phase 4: Route & Budget Engines
 - [ ] Build Route Agent for distance matrix computation (OSRM / Maps API)

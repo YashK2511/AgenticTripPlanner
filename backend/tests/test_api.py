@@ -129,6 +129,36 @@ class TestClarifyEndpoint:
         assert r.status_code == 400
 
 
+# ──────────────────── POI Search Endpoint ───────────────────────────
+
+class TestPOISearchEndpoint:
+    def test_search_pois_success(self):
+        profile_data = {
+            "destination": "Goa",
+            "start_date": (date.today() + timedelta(days=10)).isoformat(),
+            "end_date": (date.today() + timedelta(days=14)).isoformat(),
+            "budget": {"amount": 50000.0, "currency": "INR"},
+            "travelers": [{"id": "t1", "age_group": "adult", "gender": "male", "accessibility_needs": []}],
+            "interests": ["beaches", "seafood"],
+            "hard_constraints": {},
+            "soft_preferences": {},
+            "missing_fields": []
+        }
+        r = client.post("/api/poi/search", json=profile_data)
+        assert r.status_code == 200
+        candidates = r.json()
+        assert isinstance(candidates, list)
+        assert len(candidates) > 0
+        # Check candidate structure
+        first = candidates[0]
+        assert "id" in first
+        assert "name" in first
+        assert "coordinates" in first
+        assert "category" in first
+        assert "relevance_score" in first
+        assert "evidence" in first
+
+
 # ──────────────────── Live Gemini tests (opt-in) ─────────────────────
 
 @pytest.mark.llm

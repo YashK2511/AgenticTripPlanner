@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.endpoints import profile
+from app.api.endpoints import profile, poi
 from app.core import setup_logging
 from app.core.config import settings
-from app.core.database import init_db
+from app.core.database import init_db, SessionLocal
+from app.data.seed_pois import seed_database
 import app.models.db_models  # Import to register models with Base
 import uvicorn
 
@@ -12,11 +13,19 @@ import uvicorn
 logger = setup_logging(settings.LOG_LEVEL)
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     # Startup
     logger.info("Starting %s v%s", settings.APP_NAME, settings.APP_VERSION)
     logger.info("Database URL: %s", settings.database_url)
     init_db()
+
+    # Seed data
+    db = SessionLocal()
+    try:
+        seed_database(db)
+    finally:
+        db.close()
+
     yield
     # Shutdown logic would go here if needed
 
@@ -38,6 +47,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(profile.router, prefix="/api/profile", tags=["Profile Agent"])
+app.include_router(poi.router, prefix="/api/poi", tags=["POI Retrieval Agent"])
 
 
 
