@@ -78,7 +78,7 @@ export default function Home() {
             value={requestText}
             onChange={(e) => setRequestText(e.target.value)}
             placeholder="e.g., I want to plan a family trip to Goa for 4 days starting next month. We are 2 adults and 1 senior who needs wheelchair assistance. Our budget is 1,50,000 INR. We love beaches, seafood, and historic Portuguese churches."
-            className="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+            className="w-full h-32 p-4 border border-gray-300 rounded-lg text-gray-900 focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
             disabled={loading}
           />
           <button

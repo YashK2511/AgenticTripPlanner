@@ -107,9 +107,41 @@ class TransportMode(BaseModel):
 
 
 class RouteMatrix(BaseModel):
-    distances: Dict[str, float]  # stringified tuple key → meters
-    travel_times: Dict[str, float]  # stringified tuple key → minutes
+    distances: Dict[str, float]  # stringified key "poi1:poi2" → meters
+    travel_times: Dict[str, float]  # stringified key "poi1:poi2" → minutes
     mode: TransportMode
+
+    def get_distance(self, from_id: str, to_id: str) -> float:
+        return self.distances.get(f"{from_id}:{to_id}", 0.0)
+
+    def get_travel_time(self, from_id: str, to_id: str) -> float:
+        return self.travel_times.get(f"{from_id}:{to_id}", 0.0)
+
+
+class VisitSequence(BaseModel):
+    day: int
+    ordered_poi_ids: List[str]
+    total_distance_meters: float
+    total_travel_time_minutes: float
+
+
+class RouteOptimizationResult(BaseModel):
+    matrix: RouteMatrix
+    daily_sequences: List[VisitSequence]
+    total_distance_meters: float
+    total_travel_time_minutes: float
+
+
+class RouteMatrixRequest(BaseModel):
+    pois: List[POICandidate]
+    mode: Literal["walking", "transit", "driving", "bicycling"] = "driving"
+
+
+class RouteOptimizationRequest(BaseModel):
+    candidates: List[POICandidate]
+    num_days: int = 1
+    mode: Literal["walking", "transit", "driving", "bicycling"] = "driving"
+    max_hours_per_day: float = 8.0
 
 
 # ──────────────────────── Constraints ────────────────────────
@@ -125,6 +157,24 @@ class Violation(BaseModel):
 class ConstraintCheck(BaseModel):
     passed: bool
     violations: List[Violation] = Field(default_factory=list)
+
+
+class BudgetBreakdown(BaseModel):
+    total_budget: float
+    currency: str = "INR"
+    activities_min: float
+    activities_max: float
+    estimated_transit: float = 0.0
+    estimated_total_min: float
+    estimated_total_max: float
+    within_budget: bool
+    budget_margin_min: float
+
+
+class ConstraintCheckRequest(BaseModel):
+    profile: UserProfile
+    candidates: List[POICandidate]
+    route_result: Optional[RouteOptimizationResult] = None
 
 
 # ──────────────────────── Itinerary ────────────────────────

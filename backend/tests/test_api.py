@@ -159,6 +159,140 @@ class TestPOISearchEndpoint:
         assert "evidence" in first
 
 
+# ──────────────────── Route Agent Endpoints ─────────────────────────
+
+class TestRouteEndpoints:
+    def _sample_candidates(self):
+        return [
+            {
+                "id": "p1",
+                "name": "Baga Beach",
+                "coordinates": [15.5523, 73.7516],
+                "category": "Beach",
+                "description": "Popular beach",
+                "opening_hours": {"open_247": True},
+                "visit_duration": 180,
+                "cost_range": [0.0, 500.0],
+                "accessibility": {"wheelchair_accessible": False},
+                "evidence": {
+                    "source_id": "seed",
+                    "source_type": "internal_db",
+                    "retrieved_at": "2026-10-11T00:00:00Z"
+                },
+                "relevance_score": 1.0
+            },
+            {
+                "id": "p2",
+                "name": "Basilica of Bom Jesus",
+                "coordinates": [15.5009, 73.9116],
+                "category": "Historic Site",
+                "description": "Historic church",
+                "opening_hours": {"monday": "09:00-18:00"},
+                "visit_duration": 90,
+                "cost_range": [0.0, 0.0],
+                "accessibility": {"wheelchair_accessible": True},
+                "evidence": {
+                    "source_id": "seed",
+                    "source_type": "internal_db",
+                    "retrieved_at": "2026-10-11T00:00:00Z"
+                },
+                "relevance_score": 1.0
+            }
+        ]
+
+    def test_route_matrix_success(self):
+        candidates = self._sample_candidates()
+        r = client.post("/api/route/matrix", json={"pois": candidates, "mode": "driving"})
+        assert r.status_code == 200
+        data = r.json()
+        assert "distances" in data
+        assert "travel_times" in data
+        assert "p1:p2" in data["distances"]
+        assert data["distances"]["p1:p2"] > 0
+        assert data["mode"]["mode"] == "driving"
+
+    def test_route_matrix_empty_fails(self):
+        r = client.post("/api/route/matrix", json={"pois": []})
+        assert r.status_code == 400
+
+    def test_route_optimize_success(self):
+        candidates = self._sample_candidates()
+        r = client.post("/api/route/optimize", json={"candidates": candidates, "num_days": 1, "mode": "driving"})
+        assert r.status_code == 200
+        data = r.json()
+        assert "daily_sequences" in data
+        assert len(data["daily_sequences"]) == 1
+        assert len(data["daily_sequences"][0]["ordered_poi_ids"]) == 2
+        assert data["total_distance_meters"] > 0
+
+    def test_route_optimize_empty_fails(self):
+        r = client.post("/api/route/optimize", json={"candidates": [], "num_days": 1})
+        assert r.status_code == 400
+
+
+# ──────────────────── Constraint Agent Endpoints ────────────────────
+
+class TestConstraintEndpoints:
+    def _sample_payload(self):
+        return {
+            "profile": {
+                "destination": "Goa",
+                "start_date": "2026-11-01",
+                "end_date": "2026-11-03",
+                "budget": {"amount": 50000.0, "currency": "INR"},
+                "travelers": [{"id": "t1", "age_group": "adult", "gender": "male", "accessibility_needs": []}],
+                "interests": ["beaches"],
+                "hard_constraints": {},
+                "soft_preferences": {},
+                "missing_fields": []
+            },
+            "candidates": [
+                {
+                    "id": "p1",
+                    "name": "Baga Beach",
+                    "coordinates": [15.5523, 73.7516],
+                    "category": "Beach",
+                    "description": "Popular beach",
+                    "opening_hours": {"open_247": True},
+                    "visit_duration": 180,
+                    "cost_range": [0.0, 500.0],
+                    "accessibility": {"wheelchair_accessible": True},
+                    "evidence": {
+                        "source_id": "seed",
+                        "source_type": "internal_db",
+                        "retrieved_at": "2026-10-11T00:00:00Z"
+                    },
+                    "relevance_score": 1.0
+                }
+            ]
+        }
+
+    def test_constraints_validate_success(self):
+        payload = self._sample_payload()
+        r = client.post("/api/constraints/validate", json=payload)
+        assert r.status_code == 200
+        data = r.json()
+        assert "passed" in data
+        assert data["passed"] is True
+        assert "violations" in data
+
+    def test_constraints_budget_breakdown(self):
+        payload = self._sample_payload()
+        r = client.post("/api/constraints/budget", json=payload)
+        assert r.status_code == 200
+        data = r.json()
+        assert data["total_budget"] == 50000.0
+        assert data["within_budget"] is True
+        assert "activities_min" in data
+        assert "estimated_total_min" in data
+
+    def test_constraints_validate_empty_fails(self):
+        payload = self._sample_payload()
+        payload["candidates"] = []
+        r = client.post("/api/constraints/validate", json=payload)
+        assert r.status_code == 400
+
+
 # ──────────────────── Live Gemini tests (opt-in) ─────────────────────
 
 @pytest.mark.llm

@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.endpoints import profile, poi
+from app.api.endpoints import profile, poi, route, constraints
 from app.core import setup_logging
 from app.core.config import settings
 from app.core.database import init_db, SessionLocal
@@ -48,6 +48,8 @@ app.add_middleware(
 # Include routers
 app.include_router(profile.router, prefix="/api/profile", tags=["Profile Agent"])
 app.include_router(poi.router, prefix="/api/poi", tags=["POI Retrieval Agent"])
+app.include_router(route.router, prefix="/api/route", tags=["Route Agent"])
+app.include_router(constraints.router, prefix="/api/constraints", tags=["Constraint Agent"])
 
 
 

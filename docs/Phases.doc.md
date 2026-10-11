@@ -29,12 +29,12 @@
 
 ## Phase 4: Route & Budget Agents (Week 7-8)
 ### Tasks:
-- [ ] Implement Transportation & Route Planning Agent
-- [ ] Integrate distance/travel-time estimation (Maps API or NetworkX fallback)
-- [ ] Build route matrix and visit-order heuristic (OR-Tools)
-- [ ] Implement Budget & Constraint Agent
-- [ ] Add checks for cost, opening hours, accessibility, daily time limits
-- [ ] Create machine-readable pass/fail results with explanations
+- [x] Implement Transportation & Route Planning Agent
+- [x] Integrate distance/travel-time estimation (Maps API or NetworkX fallback)
+- [x] Build route matrix and visit-order heuristic (OR-Tools)
+- [x] Implement Budget & Constraint Agent
+- [x] Add checks for cost, opening hours, accessibility, daily time limits
+- [x] Create machine-readable pass/fail results with explanations
 
 ## Phase 5: Orchestration & State Management (Week 9-10)
 ### Tasks:

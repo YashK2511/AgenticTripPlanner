@@ -5,7 +5,7 @@
 - [x] **Milestone 1: Project Setup & Baseline Schemas** (Target: Phase 1)
 - [x] **Milestone 2: Profile Extraction & Natural Language Parser** (Target: Phase 2)
 - [x] **Milestone 3: Data Ingestion & Vector Retrieval Pipeline** (Target: Phase 3)
-- [ ] **Milestone 4: Route Matrix & Budget Deterministic Solvers** (Target: Phase 4)
+- [x] **Milestone 4: Route Matrix & Budget Deterministic Solvers** (Target: Phase 4)
 - [ ] **Milestone 5: LangGraph Multi-Agent Orchestrator** (Target: Phase 5)
 - [ ] **Milestone 6: Itinerary Synthesis & Critic Verifier** (Target: Phase 6)
 - [ ] **Milestone 7: Replanning Feedback Loop & Frontend UI** (Target: Phase 7)
@@ -34,10 +34,10 @@
 - [x] Ensure source evidence metadata is attached to all returned candidates
 
 ### Phase 4: Route & Budget Engines
-- [ ] Build Route Agent for distance matrix computation (OSRM / Maps API)
-- [ ] Implement visit-order sequencing heuristic using OR-Tools (TSP with time windows)
-- [ ] Implement Budget & Constraint Agent for cost and schedule feasibility validation
-- [ ] Add pass/fail violation object generators
+- [x] Build Route Agent for distance matrix computation (OSRM / Maps API + Haversine fallback)
+- [x] Implement visit-order sequencing heuristic using OR-Tools (TSP with time windows)
+- [x] Implement Budget & Constraint Agent for cost and schedule feasibility validation
+- [x] Add pass/fail violation object generators
 
 ### Phase 5: Multi-Agent Orchestration
 - [ ] Construct LangGraph state graph for supervisor-coordinated agent flow
