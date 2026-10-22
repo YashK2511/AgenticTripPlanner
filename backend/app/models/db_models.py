@@ -14,6 +14,7 @@ class TripStateModel(Base):
     candidates_json = Column(JSON, nullable=True)  # Dict of POICandidate
     routes_json = Column(JSON, nullable=True)  # Serialized RouteMatrix
     constraints_json = Column(JSON, nullable=True)  # Serialized ConstraintCheck
+    context_json = Column(JSON, nullable=True)  # Serialized ContextData (Phase 5)
     itinerary_versions_json = Column(JSON, nullable=True)  # List of Itinerary
     current_version = Column(Integer, default=0)
     validation_status_json = Column(JSON, nullable=True)  # Serialized ValidationReport
@@ -93,4 +94,23 @@ class EvidenceModel(Base):
     retrieved_at = Column(DateTime(timezone=True), nullable=False)
     url = Column(String, nullable=True)
     poi_id = Column(String, index=True)  # FK to poi_candidates
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class AgentTraceModel(Base):
+    """
+    SQLAlchemy model for storing per-node execution telemetry during LangGraph supervisor runs.
+    """
+    __tablename__ = "agent_traces"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    trip_id = Column(String, nullable=False, index=True)
+    trace_id = Column(String, nullable=False, index=True)
+    agent_name = Column(String, nullable=False)
+    node_name = Column(String, nullable=False)
+    status = Column(String, nullable=False)  # "success" | "failure" | "skipped" | "error"
+    latency_ms = Column(Float, nullable=False)
+    input_summary_json = Column(JSON, nullable=True)
+    output_summary_json = Column(JSON, nullable=True)
+    error_message = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

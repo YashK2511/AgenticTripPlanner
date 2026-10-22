@@ -38,12 +38,12 @@
 
 ## Phase 5: Orchestration & State Management (Week 9-10)
 ### Tasks:
-- [ ] Implement Supervisor/Orchestrator Agent using LangGraph
-- [ ] Design shared trip state schema and storage
-- [ ] Build task decomposition and dependency tracking
-- [ ] Implement agent communication via typed JSON contracts
-- [ ] Add Context Agent for weather/traffic (when APIs available)
-- [ ] Test concurrent agent execution and state updates
+- [x] Implement Supervisor/Orchestrator Agent using LangGraph
+- [x] Design shared trip state schema and storage
+- [x] Build task decomposition and dependency tracking
+- [x] Implement agent communication via typed JSON contracts
+- [x] Add Context Agent for weather/traffic (when APIs available)
+- [x] Test concurrent agent execution and state updates
 
 ## Phase 6: Synthesis & Verification (Week 11-12)
 ### Tasks:

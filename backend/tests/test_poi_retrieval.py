@@ -33,11 +33,14 @@ class TestEmbeddingService:
 
         # We must unset the global _model to force lazy load
         import app.services.embedding_service as ems
+        old_model = ems._model
         ems._model = None
-
-        result = encode_text("test")
-        assert result == [0.1, 0.2, 0.3]
-        mock_model_instance.encode.assert_called_once_with("test", normalize_embeddings=True)
+        try:
+            result = encode_text("test")
+            assert result == [0.1, 0.2, 0.3]
+            mock_model_instance.encode.assert_called_once_with("test", normalize_embeddings=True)
+        finally:
+            ems._model = old_model
 
 
 class TestPOIRetrievalAgent:

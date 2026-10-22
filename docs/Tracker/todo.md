@@ -6,7 +6,7 @@
 - [x] **Milestone 2: Profile Extraction & Natural Language Parser** (Target: Phase 2)
 - [x] **Milestone 3: Data Ingestion & Vector Retrieval Pipeline** (Target: Phase 3)
 - [x] **Milestone 4: Route Matrix & Budget Deterministic Solvers** (Target: Phase 4)
-- [ ] **Milestone 5: LangGraph Multi-Agent Orchestrator** (Target: Phase 5)
+- [x] **Milestone 5: LangGraph Multi-Agent Orchestrator** (Target: Phase 5)
 - [ ] **Milestone 6: Itinerary Synthesis & Critic Verifier** (Target: Phase 6)
 - [ ] **Milestone 7: Replanning Feedback Loop & Frontend UI** (Target: Phase 7)
 - [ ] **Milestone 8: Benchmarking, Testing & Evaluation** (Target: Phase 8)
@@ -40,10 +40,10 @@
 - [x] Add pass/fail violation object generators
 
 ### Phase 5: Multi-Agent Orchestration
-- [ ] Construct LangGraph state graph for supervisor-coordinated agent flow
-- [ ] Implement shared trip state schema and history tracking
-- [ ] Add Context Agent for weather and disruption data
-- [ ] Set up trace logging for agent provenance and telemetry
+- [x] Construct LangGraph state graph for supervisor-coordinated agent flow
+- [x] Implement shared trip state schema and history tracking
+- [x] Add Context Agent for weather and disruption data
+- [x] Set up trace logging for agent provenance and telemetry
 
 ### Phase 6: Synthesis & Critic Verification
 - [ ] Implement Itinerary Synthesis Agent to generate daily time blocks (activity, travel, meals, rest)

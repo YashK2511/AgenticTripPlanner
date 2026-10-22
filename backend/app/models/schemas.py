@@ -1,6 +1,7 @@
-from typing import List, Optional, Literal, Dict, Any, Tuple
+from typing import Annotated, List, Optional, Literal, Dict, Any, Tuple
+import operator
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-from datetime import date, time, datetime
+from datetime import date, time, datetime, timezone
 
 
 # ──────────────────────── Profile & Traveler ────────────────────────
@@ -232,3 +233,83 @@ class TripState(BaseModel):
     validation_status: Optional[ValidationReport] = None
     created_at: datetime
     updated_at: datetime
+
+
+# ──────────────────────── Context & Disruptions ──────────────────────
+
+class WeatherInfo(BaseModel):
+    destination: str
+    condition: str
+    temperature_c: Optional[float] = None
+    feels_like_c: Optional[float] = None
+    precipitation_chance: Optional[float] = 0.0
+    humidity: Optional[float] = None
+    wind_speed_kmh: Optional[float] = None
+    forecast_days: List[Dict[str, Any]] = Field(default_factory=list)
+    warnings: List[str] = Field(default_factory=list)
+
+
+class Disruption(BaseModel):
+    id: str
+    category: str  # "weather", "traffic", "transit", "closure"
+    severity: Literal["low", "medium", "high", "critical"] = "medium"
+    description: str
+    affected_area: Optional[str] = None
+    start_time: Optional[datetime] = None
+    end_time: Optional[datetime] = None
+
+
+class ContextData(BaseModel):
+    weather: Optional[WeatherInfo] = None
+    traffic: Optional[Dict[str, Any]] = None
+    disruptions: List[Disruption] = Field(default_factory=list)
+    availability: Dict[str, bool] = Field(
+        default_factory=lambda: {"weather": False, "traffic": False}
+    )
+    retrieved_at: Optional[datetime] = None
+
+
+# ──────────────────────── Telemetry ──────────────────────────────────
+
+class AgentTrace(BaseModel):
+    trace_id: str
+    agent_name: str
+    node_name: str
+    status: Literal["success", "failure", "skipped", "error"]
+    latency_ms: float
+    input_summary: Optional[Dict[str, Any]] = None
+    output_summary: Optional[Dict[str, Any]] = None
+    error_message: Optional[str] = None
+    timestamp: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc)
+    )
+
+
+# ──────────────────────── Orchestrator Request / Response ─────────────
+
+class TripPlanRequest(BaseModel):
+    request_text: Optional[str] = None
+    user_profile: Optional[UserProfile] = None
+    mode: Literal["walking", "transit", "driving", "bicycling"] = "driving"
+    max_hours_per_day: float = 8.0
+
+    @model_validator(mode="after")
+    def validate_inputs(self):
+        if not self.request_text and not self.user_profile:
+            raise ValueError(
+                "Either request_text or user_profile must be provided"
+            )
+        return self
+
+
+class TripPlanResponse(BaseModel):
+    trip_id: str
+    status: Literal["completed", "incomplete_profile", "failed", "in_progress"]
+    profile: Optional[UserProfile] = None
+    clarification_questions: List[str] = Field(default_factory=list)
+    candidates: List[POICandidate] = Field(default_factory=list)
+    routes: Optional[RouteOptimizationResult] = None
+    constraints: Optional[ConstraintCheck] = None
+    context: Optional[ContextData] = None
+    traces: List[AgentTrace] = Field(default_factory=list)
+    message: Optional[str] = None
